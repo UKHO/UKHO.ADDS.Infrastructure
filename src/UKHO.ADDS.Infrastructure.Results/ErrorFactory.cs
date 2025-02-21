@@ -1,20 +1,24 @@
 ﻿using System.Net;
-using UKHO.ADDS.Infrastructure.Results.Errors;
+using UKHO.ADDS.Infrastructure.Results.Errors.Http;
 
 namespace UKHO.ADDS.Infrastructure.Results
 {
     public sealed class ErrorFactory
     {
-        public static IError CreateError(HttpStatusCode statusCode) =>
+        public static IError CreateError(HttpStatusCode statusCode) => CreateError(statusCode, new Dictionary<string, object>());
+
+        public static IError CreateError(HttpStatusCode statusCode, IDictionary<string, object> properties) => CreateError(statusCode, string.Empty, properties);
+
+        public static IError CreateError(HttpStatusCode statusCode, string message, IDictionary<string, object> properties) =>
             statusCode switch
             {
-                HttpStatusCode.BadRequest => new BadRequestError(),
-                HttpStatusCode.Unauthorized => new UnauthorizedError(),
-                HttpStatusCode.ServiceUnavailable => new ServiceUnavailableError(),
-                HttpStatusCode.BadGateway => new DownstreamServiceError(),
-                HttpStatusCode.NotFound => new NotFoundError(),
-                HttpStatusCode.InternalServerError => new InternalServerError(),
-                _ => new HttpError(statusCode)
+                HttpStatusCode.BadRequest => new BadRequestHttpError(message, properties),
+                HttpStatusCode.Unauthorized => new UnauthorizedHttpError(message, properties),
+                HttpStatusCode.ServiceUnavailable => new ServiceUnavailableHttpError(message, properties),
+                HttpStatusCode.BadGateway => new DownstreamServiceHttpError(message, properties),
+                HttpStatusCode.NotFound => new NotFoundHttpError(message, properties),
+                HttpStatusCode.InternalServerError => new InternalServerHttpError(message, properties),
+                _ => new HttpError(statusCode, message, properties)
             };
     }
 }
