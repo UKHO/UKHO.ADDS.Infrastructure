@@ -65,7 +65,7 @@ namespace UKHO.ADDS.Infrastructure.Pipelines.Tests
             pipelineNode.Status.Should().Be(NodeRunStatus.Completed);
             result.FlowId.Should().Be("Flow1");
             result.Id.Should().Be("PipelineNode1");
-            result.ChildResults.First().Id.Should().Be("UKHO.Infrastructure.Pipelines.Tests.SimpleTestNodeA1");
+            result.ChildResults.First().Id.Should().Be("UKHO.ADDS.Infrastructure.Pipelines.Tests.SimpleTestNodeA1");
             result.ChildResults.First().FlowId.Should().Be("Flow1");
 
             var secondResult = result.ChildResults.FirstOrDefault(x => x.Id == "Child2");
