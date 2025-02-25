@@ -294,7 +294,7 @@ namespace UKHO.ADDS.Infrastructure.Pipelines.Nodes
                     }
                     catch (Exception ex)
                     {
-                        Logger.LogError("Node erred during execution, status is Failed", ex);
+                        Logger.LogError("Node erred during execution, status is Failed, {0}", ex.Message);
                         Status = NodeRunStatus.Faulted;
                         result.Subject = context.Subject;
                         result.Status = NodeResultStatus.Failed;

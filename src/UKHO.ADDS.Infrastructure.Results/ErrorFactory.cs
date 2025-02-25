@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using UKHO.ADDS.Infrastructure.Results.Errors;
 using UKHO.ADDS.Infrastructure.Results.Errors.Http;
 
 namespace UKHO.ADDS.Infrastructure.Results
@@ -20,5 +21,27 @@ namespace UKHO.ADDS.Infrastructure.Results
                 HttpStatusCode.InternalServerError => new InternalServerHttpError(message, properties),
                 _ => new HttpError(statusCode, message, properties)
             };
+
+        public static IDictionary<string, object> CreateProperties(string? correlationId = null, string? source = null, string? description = null)
+        {
+            var properties = new Dictionary<string, object>();
+
+            if (!string.IsNullOrEmpty(correlationId))
+            {
+                properties.Add(WellKnownErrorProperty.CorrelationId, correlationId);
+            }
+
+            if (!string.IsNullOrEmpty(source))
+            {
+                properties.Add(WellKnownErrorProperty.Source, source);
+            }
+
+            if (!string.IsNullOrEmpty(description))
+            {
+                properties.Add(WellKnownErrorProperty.Description, description);
+            }
+
+            return properties;
+        }
     }
 }
