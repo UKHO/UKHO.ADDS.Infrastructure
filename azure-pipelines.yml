@@ -7,7 +7,7 @@ pool: NautilusBuild
 
 variables:
 - name: BuildConfiguration
-  value: "release"
+  value: "Release"
 - name: BuildPlatform
   value: "any cpu"
 - name: BuildCounter
