@@ -1,0 +1,5 @@
+name: $(BuildDefinitionName)_$(SourceBranchName)_$(Date:yyyyMMdd).$(BuildCounter)
+
+trigger:
+- main
+
