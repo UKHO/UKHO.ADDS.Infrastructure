@@ -19,7 +19,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UKHO.ADDS.Infrastructure.Se
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Pipeline", "Pipeline", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
 	ProjectSection(SolutionItems) = preProject
+		Apply-AssemblyVersionAndDefaults.ps1 = Apply-AssemblyVersionAndDefaults.ps1
 		azure-pipelines.yml = azure-pipelines.yml
+		BuildNuget.config = BuildNuget.config
 	EndProjectSection
 EndProject
 Global
@@ -60,5 +62,8 @@ Global
 		{05C095C7-9D9C-4F93-9030-103C1E488029} = {277A0F3B-598D-4707-BA12-38059764CD6D}
 		{7C813917-7CE6-4A84-A47D-9B614B64A169} = {277A0F3B-598D-4707-BA12-38059764CD6D}
 		{57953B27-4362-4219-AFC3-08522D9EE4D6} = {277A0F3B-598D-4707-BA12-38059764CD6D}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {94E73D29-CE3E-42BE-8AF0-90BE32C7DAB0}
 	EndGlobalSection
 EndGlobal
