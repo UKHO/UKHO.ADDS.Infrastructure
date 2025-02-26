@@ -97,7 +97,7 @@ stages:
         path: $(Build.ArtifactStagingDirectory)/packages
         artifact: NuGetPackages
 
-- stage: Proget
+- stage: ProGet
   #condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
   variables:
   - group: nuget-deployment-vars
@@ -110,7 +110,10 @@ stages:
     strategy:
       runOnce:
         deploy:
-          steps:              
+          steps:
+          - powershell: Remove-Item "$(Pipeline.Workspace)/NuGetPackages/*.nupkg"
+            displayName: Clean NuGetPackages folder
+
           - task: UseDotNet@2
             displayName: 'Use .NET $(SdkVersion) sdk'
             inputs:
