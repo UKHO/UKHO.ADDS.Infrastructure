@@ -73,6 +73,15 @@ stages:
         nugetConfigPath: '$(Build.SourcesDirectory)\BuildNuget.config'
         workingDirectory: '$(Build.SourcesDirectory)'
         packagesDirectory: '$(Build.SourcesDirectory)\packages'
+
+    - task: DotNetCoreCLI@2
+      displayName: Unit tests
+      inputs:
+        command: test
+        projects: |
+          **/*.Tests.csproj
+        testRunTitle: UnitTests
+        workingDirectory: '$(Build.SourcesDirectory)'
     
     - task: DotNetCoreCLI@2
       displayName: Pack libraries
