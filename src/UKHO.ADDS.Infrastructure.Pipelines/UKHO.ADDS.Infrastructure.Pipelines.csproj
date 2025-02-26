@@ -6,6 +6,9 @@
     <PackageId>$(AssemblyName)</PackageId>
     <Authors>Abzu</Authors>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/UKHO/UKHO.ADDS.Infrastructure</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/UKHO/UKHO.ADDS.Infrastructure</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>

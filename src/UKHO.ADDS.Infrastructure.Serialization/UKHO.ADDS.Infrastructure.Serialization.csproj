@@ -7,6 +7,9 @@
     <Authors>Abzu</Authors>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
     <Nullable>enable</Nullable>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/UKHO/UKHO.ADDS.Infrastructure</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/UKHO/UKHO.ADDS.Infrastructure</RepositoryUrl>
   </PropertyGroup>
 
 </Project>
