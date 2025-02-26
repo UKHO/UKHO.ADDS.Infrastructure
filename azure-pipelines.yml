@@ -38,7 +38,7 @@ stages:
         script: |
           gci env:
           $CurrentYear = Get-Date -Format "yyyy"
-          $AssemblyCopyright = "Copyright © UK Hydrographic  Office $CurrentYear"
+          $AssemblyCopyright = "Copyright © UK Hydrographic Office $CurrentYear"
           echo "##vso[task.setvariable variable=UKHOAssemblyCopyright]${AssemblyCopyright}"
 
     - task: PowerShell@2
@@ -73,6 +73,15 @@ stages:
         nugetConfigPath: '$(Build.SourcesDirectory)\BuildNuget.config'
         workingDirectory: '$(Build.SourcesDirectory)'
         packagesDirectory: '$(Build.SourcesDirectory)\packages'
+
+    - task: DotNetCoreCLI@2
+      displayName: Unit tests
+      inputs:
+        command: test
+        projects: |
+          **/*.Tests.csproj
+        testRunTitle: UnitTests
+        workingDirectory: '$(Build.SourcesDirectory)'
     
     - task: DotNetCoreCLI@2
       displayName: Pack libraries
@@ -88,7 +97,7 @@ stages:
         path: $(Build.ArtifactStagingDirectory)/packages
         artifact: NuGetPackages
 
-- stage: Proget
+- stage: ProGet
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
   variables:
   - group: nuget-deployment-vars
@@ -101,7 +110,10 @@ stages:
     strategy:
       runOnce:
         deploy:
-          steps:              
+          steps:
+          - powershell: Remove-Item "$(Pipeline.Workspace)/NuGetPackages/*.nupkg"
+            displayName: Clean NuGetPackages folder
+
           - task: UseDotNet@2
             displayName: 'Use .NET $(SdkVersion) sdk'
             inputs:

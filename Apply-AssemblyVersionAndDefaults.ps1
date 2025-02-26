@@ -20,18 +20,20 @@ if ($validBuildNumber -eq $false) {
 }
 
 # Magic var $Matches comes from the above regex match statement: $buildNumber -match $buildNumberRegex
-$buildRevisionNumber = $Matches.2 + "." + $Matches.3
-$versionToApply = $UKHOAssemblyVersionPrefix + $buildRevisionNumber
-Write-Host "##vso[task.setvariable variable=NuGetVersion;isOutput=true]$($versionToApply)"
+$versionPrefix = $UKHOAssemblyVersionPrefix + $Matches.2
+$versionSuffix = "alpha." + $Matches.3
+$versionFull = $versionPrefix + "." + $Matches.3
+Write-Host "##vso[task.setvariable variable=NuGetVersion;isOutput=true]$($versionFull)"
 
 $assemblyValues = @{
     "Company"           = $UKHOAssemblyCompany;
     "Copyright"         = $UKHOAssemblyCopyright;
     "Description"       = $UKHOAssemblyProduct;
     "Product"           = $UKHOAssemblyProduct;
-    "AssemblyVersion"   = $versionToApply;
-    "FileVersion"       = $versionToApply;
-    "Version"           = $versionToApply;
+    "AssemblyVersion"   = $versionFull;
+    "FileVersion"       = $versionFull;
+    "VersionPrefix"     = $versionPrefix;
+    "VersionSuffix"     = $versionSuffix;
     "SourceRevisionId"  = $SourceRevisionId;
 }
 
