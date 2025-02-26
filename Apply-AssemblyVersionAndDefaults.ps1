@@ -22,7 +22,7 @@ if ($validBuildNumber -eq $false) {
 # Magic var $Matches comes from the above regex match statement: $buildNumber -match $buildNumberRegex
 $versionPrefix = $UKHOAssemblyVersionPrefix + $Matches.2
 $versionSuffix = "alpha." + $Matches.3
-$versionFull = $versionPrefix + "-" + $versionSuffix
+$versionFull = $versionPrefix + "." + $Matches.3
 Write-Host "##vso[task.setvariable variable=NuGetVersion;isOutput=true]$($versionFull)"
 
 $assemblyValues = @{
