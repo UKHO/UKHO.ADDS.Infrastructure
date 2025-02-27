@@ -107,13 +107,12 @@ stages:
     pool:
       name: NautilusRelease
     environment: UKHO-ADDS-Infrastructure-ProGet
+    workspace:
+      clean: all
     strategy:
       runOnce:
         deploy:
           steps:
-          - powershell: Remove-Item "$(Pipeline.Workspace)/NuGetPackages/*.nupkg"
-            displayName: Clean NuGetPackages folder
-
           - task: UseDotNet@2
             displayName: 'Use .NET $(SdkVersion) sdk'
             inputs:
