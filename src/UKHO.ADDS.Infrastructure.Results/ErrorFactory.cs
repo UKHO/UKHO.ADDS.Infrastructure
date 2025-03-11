@@ -19,26 +19,16 @@ namespace UKHO.ADDS.Infrastructure.Results
                 HttpStatusCode.BadGateway => new DownstreamServiceHttpError(message, properties),
                 HttpStatusCode.NotFound => new NotFoundHttpError(message, properties),
                 HttpStatusCode.InternalServerError => new InternalServerHttpError(message, properties),
-                _ => new HttpError(statusCode, message, properties)
+                _ => new GeneralHttpError(statusCode, message, properties)
             };
 
-        public static IDictionary<string, object> CreateProperties(string? correlationId = null, string? source = null, string? description = null)
+        public static IDictionary<string, object> CreateProperties(string? correlationId = null)
         {
             var properties = new Dictionary<string, object>();
 
             if (!string.IsNullOrEmpty(correlationId))
             {
                 properties.Add(WellKnownErrorProperty.CorrelationId, correlationId);
-            }
-
-            if (!string.IsNullOrEmpty(source))
-            {
-                properties.Add(WellKnownErrorProperty.Source, source);
-            }
-
-            if (!string.IsNullOrEmpty(description))
-            {
-                properties.Add(WellKnownErrorProperty.Description, description);
             }
 
             return properties;

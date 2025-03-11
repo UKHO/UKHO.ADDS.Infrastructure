@@ -2,7 +2,7 @@
 
 namespace UKHO.ADDS.Infrastructure.Results.Errors.Http
 {
-    public sealed class UnauthorizedHttpError : AbstractHttpError
+    public sealed class UnauthorizedHttpError : HttpError
     {
         private const string DefaultMessage = "The request was unauthorized";
 

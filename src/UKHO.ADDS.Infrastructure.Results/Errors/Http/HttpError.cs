@@ -2,22 +2,25 @@
 
 namespace UKHO.ADDS.Infrastructure.Results.Errors.Http
 {
-    public sealed class HttpError : AbstractHttpError
+    public abstract class HttpError : Error
     {
-        public HttpError(HttpStatusCode statusCode)
-            : base(statusCode, $"An HTTP error occured, status code {statusCode}", new Dictionary<string, object>())
+        protected HttpError(HttpStatusCode statusCode)
+            : base($"An HTTP error occured, status code {statusCode}", new Dictionary<string, object> { { "StatusCode", statusCode } })
         {
         }
 
-        public HttpError(HttpStatusCode statusCode, IDictionary<string, object> properties)
-            : base(statusCode, $"An HTTP error occured, status code {statusCode}", properties)
+        protected HttpError(HttpStatusCode statusCode, string message, IDictionary<string, object> properties)
+            : base(message, MergeProperties(properties, new Dictionary<string, object> { { "StatusCode", statusCode } }))
         {
         }
 
-        public HttpError(HttpStatusCode statusCode, string message, IDictionary<string, object> properties)
-            : base(statusCode, message, properties)
+        public HttpStatusCode StatusCode => (HttpStatusCode)Metadata["StatusCode"];
+
+        private static IReadOnlyDictionary<string, object> MergeProperties(IDictionary<string, object> properties0, IDictionary<string, object> properties1)
         {
+            return new Dictionary<string, object>(properties0.Concat(properties1.Where(kvp => !properties0.ContainsKey(kvp.Key))));
         }
+
+        protected static string SetMessage(string message, string defaultMessage) => string.IsNullOrWhiteSpace(message) ? defaultMessage : message;
     }
 }
-
