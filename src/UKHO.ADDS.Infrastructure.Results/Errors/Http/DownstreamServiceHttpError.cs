@@ -2,7 +2,7 @@
 
 namespace UKHO.ADDS.Infrastructure.Results.Errors.Http
 {
-    public sealed class DownstreamServiceHttpError : AbstractHttpError
+    public sealed class DownstreamServiceHttpError : HttpError
     {
         private const string DefaultMessage = "A downstream service error occured";
 

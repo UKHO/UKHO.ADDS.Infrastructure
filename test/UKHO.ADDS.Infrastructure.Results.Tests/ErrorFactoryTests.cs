@@ -13,7 +13,7 @@ namespace UKHO.ADDS.Infrastructure.Results.Tests
         [InlineData(HttpStatusCode.NotFound, typeof(NotFoundHttpError))]
         [InlineData(HttpStatusCode.ServiceUnavailable, typeof(ServiceUnavailableHttpError))]
         [InlineData(HttpStatusCode.Unauthorized, typeof(UnauthorizedHttpError))]
-        [InlineData(HttpStatusCode.HttpVersionNotSupported, typeof(HttpError))]
+        [InlineData(HttpStatusCode.HttpVersionNotSupported, typeof(GeneralHttpError))]
 
         public void ErrorFactory_ShouldCreateCorrectErrorType(HttpStatusCode statusCode, Type expectedType)
         {

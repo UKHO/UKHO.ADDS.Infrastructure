@@ -2,7 +2,7 @@
 
 namespace UKHO.ADDS.Infrastructure.Results.Errors.Http
 {
-    public sealed class InternalServerHttpError : AbstractHttpError
+    public sealed class InternalServerHttpError : HttpError
     {
         private const string DefaultMessage = "An internal server error occured";
 

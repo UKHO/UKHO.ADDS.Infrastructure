@@ -2,7 +2,7 @@
 
 namespace UKHO.ADDS.Infrastructure.Results.Errors.Http
 {
-    public sealed class NotFoundHttpError : AbstractHttpError
+    public sealed class NotFoundHttpError : HttpError
     {
         private const string DefaultMessage = "The requested resource was not found";
 

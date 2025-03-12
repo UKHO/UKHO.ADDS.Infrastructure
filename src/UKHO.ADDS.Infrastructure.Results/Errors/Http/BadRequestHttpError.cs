@@ -2,7 +2,7 @@
 
 namespace UKHO.ADDS.Infrastructure.Results.Errors.Http
 {
-    public sealed class BadRequestHttpError : AbstractHttpError
+    public sealed class BadRequestHttpError : HttpError
     {
         private const string DefaultMessage = "Bad request";
 

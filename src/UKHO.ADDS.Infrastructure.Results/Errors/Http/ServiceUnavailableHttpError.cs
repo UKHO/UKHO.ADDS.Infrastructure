@@ -2,7 +2,7 @@
 
 namespace UKHO.ADDS.Infrastructure.Results.Errors.Http
 {
-    public sealed class ServiceUnavailableHttpError : AbstractHttpError
+    public sealed class ServiceUnavailableHttpError : HttpError
     {
         private const string DefaultMessage = "The service is unavailable";
 
