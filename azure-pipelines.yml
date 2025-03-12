@@ -152,7 +152,7 @@ stages:
           - download: current
             artifact: NuGetPackages
 
-          - powershell: Get-ChildItem "$(Pipeline.Workspace)/NuGetPackages/*.nupkg" -File | Foreach {dotnet nuget push $_.fullname -k $(nugetapikey) -s https://api.nuget.org/v3/index.json --no-symbols true}
+          - powershell: Get-ChildItem "$(Pipeline.Workspace)/NuGetPackages/*.nupkg" -File | Foreach {dotnet nuget push $_.fullname -k $(nugetapikey) -s https://api.nuget.org/v3/index.json --no-symbols}
             env:
               nugetApiKey : $(nugetapikey)
             displayName: Publish Package
