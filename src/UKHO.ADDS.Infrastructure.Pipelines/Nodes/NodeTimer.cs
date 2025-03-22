@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
-using Microsoft.Extensions.Logging;
+using Serilog;
+using Serilog.Events;
 
 namespace UKHO.ADDS.Infrastructure.Pipelines.Nodes
 {
@@ -13,8 +14,7 @@ namespace UKHO.ADDS.Infrastructure.Pipelines.Nodes
         public string StartTimer(dynamic instance, string methodName)
         {
             _stopwatch = Stopwatch.StartNew();
-            return $"Starting stopwatch for methodName {methodName} of class {instance.GetType().FullName} with " +
-                   $"nodeId {instance.Id} from flowId {instance.FlowId}.";
+            return $"Starting stopwatch for methodName {methodName} of class {instance.GetType().FullName}";
         }
 
         public string StopTimer(dynamic instance, string methodName)
@@ -23,29 +23,27 @@ namespace UKHO.ADDS.Infrastructure.Pipelines.Nodes
             {
                 _stopwatch.Stop();
                 var elapsed = _stopwatch.Elapsed.TotalMilliseconds;
-                return $"Stopping stopwatch for methodName {methodName} of class {instance.GetType().FullName} with " +
-                       $"nodeId {instance.Id} from flowId {instance.FlowId}. Elapsed ms: {elapsed}";
+                return $"Stopping stopwatch for methodName {methodName} of class {instance.GetType().FullName}. Elapsed ms: {elapsed}";
             }
 
-            return $"Call to stop occurred, but stopwatch not started. Class {instance.GetType().FullName}, " +
-                   $"Method {methodName}, NodeId {instance.Id}, FlowId {instance.FlowId}. ";
+            return $"Call to stop occurred, but stopwatch not started. Class {instance.GetType().FullName}, Method {methodName}";
         }
 
-        public void LogStart(ILogger logger, dynamic node, string methodName)
+        public void LogStart(dynamic node, string methodName)
         {
-            if (logger.IsEnabled(LogLevel.Debug))
+            if (Log.IsEnabled(LogEventLevel.Debug))
             {
                 string message = StartTimer(node, methodName);
-                logger.LogDebug(message);
+                Log.Debug(message);
             }
         }
 
-        public void LogStop(ILogger logger, dynamic node, string methodName)
+        public void LogStop(dynamic node, string methodName)
         {
-            if (logger.IsEnabled(LogLevel.Debug))
+            if (Log.IsEnabled(LogEventLevel.Debug))
             {
                 string message = StopTimer(node, methodName);
-                logger.LogDebug(message);
+                Log.Debug(message);
             }
         }
     }

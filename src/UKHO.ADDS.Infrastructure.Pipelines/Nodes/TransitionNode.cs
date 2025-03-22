@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
+using Serilog;
+using Serilog.Core;
 using UKHO.ADDS.Infrastructure.Pipelines.Contexts;
 using UKHO.ADDS.Infrastructure.Pipelines.Factories;
 
@@ -43,31 +44,31 @@ namespace UKHO.ADDS.Infrastructure.Pipelines.Nodes
         {
             if (ChildNode == null)
             {
-                Logger.LogWarning("Child node of TransitionNode doesn't exist, node will be skipped.");
+                Log.Warning("Child node of TransitionNode doesn't exist, node will be skipped.");
                 return NodeResultStatus.NotRun;
             }
 
-            Logger.LogDebug("Creating the TransitionNode destination subject.");
+            Log.Debug("Creating the TransitionNode destination subject.");
             var destSubject = await TransitionSourceAsync(context).ConfigureAwait(false);
 
             var destContext = new ExecutionContext<TDestination>(destSubject, context.GlobalOptions);
 
-            Logger.LogDebug("Preparing to execute TransitionNode child.");
+            Log.Debug("Preparing to execute TransitionNode child.");
             var destResult = await ChildNode.ExecuteAsync(destContext).ConfigureAwait(false);
 
             var exceptions = destResult.GetFailExceptions().ToList();
             if (exceptions.Count > 0)
             {
-                Logger.LogInformation("TransitionNode child returned {0} exceptions.", exceptions.Count);
+                Log.Information("TransitionNode child returned {0} exceptions.", exceptions.Count);
                 context.ParentResult.Exception = exceptions.Count == 1 ? exceptions[0] : new AggregateException(exceptions);
             }
 
-            Logger.LogDebug("Creating the TransitionNode destination result.");
+            Log.Debug("Creating the TransitionNode destination result.");
             var resultSubject = await TransitionResultAsync(context, destResult).ConfigureAwait(false);
 
             if (!context.Subject.Equals(resultSubject))
             {
-                Logger.LogDebug("Source subject has changed, calling ChangeSubject.");
+                Log.Debug("Source subject has changed, calling ChangeSubject.");
                 context.ChangeSubject(resultSubject);
             }
 

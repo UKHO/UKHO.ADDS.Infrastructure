@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
+using Serilog;
+using Serilog.Core;
 
 namespace UKHO.ADDS.Infrastructure.Pipelines.Nodes
 {
@@ -24,11 +25,11 @@ namespace UKHO.ADDS.Infrastructure.Pipelines.Nodes
         {
             if (ExecutedFunc != null)
             {
-                Logger.LogDebug("ExecutedFuncAsync exists, running this function.");
+                Log.Debug("ExecutedFuncAsync exists, running this function.");
                 return await ExecutedFunc(context).ConfigureAwait(false);
             }
 
-            Logger.LogDebug("ExecutedFuncAsync doesn't exist, defaulting to base class PerformExecute.");
+            Log.Debug("ExecutedFuncAsync doesn't exist, defaulting to base class PerformExecute.");
             return await base.PerformExecuteAsync(context).ConfigureAwait(false);
         }
     }

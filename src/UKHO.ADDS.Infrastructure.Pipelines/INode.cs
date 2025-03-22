@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
 using UKHO.ADDS.Infrastructure.Pipelines.Contexts;
 using UKHO.ADDS.Infrastructure.Pipelines.Nodes;
 
@@ -38,11 +37,6 @@ namespace UKHO.ADDS.Infrastructure.Pipelines
         ///     Metadata applied to the node.
         /// </summary>
         dynamic CustomData { get; set; }
-
-        /// <summary>
-        ///     Gets the current log writer
-        /// </summary>
-        ILogger Logger { get; }
 
         /// <summary>
         ///     Gets or sets the async function to call to determine if this node should be executed.
