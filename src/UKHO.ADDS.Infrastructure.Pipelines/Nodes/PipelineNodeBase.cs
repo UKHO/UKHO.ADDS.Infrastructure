@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
-using UKHO.ADDS.Infrastructure.Pipelines.Contexts;
+using Serilog;
 
 namespace UKHO.ADDS.Infrastructure.Pipelines.Nodes
 {
@@ -24,10 +23,10 @@ namespace UKHO.ADDS.Infrastructure.Pipelines.Nodes
 
             var effectiveOptions = GetEffectiveOptions(context.GlobalOptions);
 
-            Logger.LogDebug("Running each child node in the pipeline sequentially.");
+            Log.Debug("Running each child node in the pipeline sequentially.");
             foreach (var childNode in Children)
             {
-                Logger.LogDebug("Running child node.");
+                Log.Debug("Running child node.");
                 var result = await childNode.ExecuteAsync(context).ConfigureAwait(false);
 
                 results.Add(result);

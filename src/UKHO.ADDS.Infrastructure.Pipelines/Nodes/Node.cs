@@ -3,10 +3,10 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
+using Serilog;
+using Serilog.Core;
 using UKHO.ADDS.Infrastructure.Pipelines.Contexts;
 using UKHO.ADDS.Infrastructure.Pipelines.Extensions;
-using UKHO.ADDS.Infrastructure.Pipelines.Logging;
 using UKHO.ADDS.Infrastructure.Pipelines.Utility;
 
 namespace UKHO.ADDS.Infrastructure.Pipelines.Nodes
@@ -66,16 +66,11 @@ namespace UKHO.ADDS.Infrastructure.Pipelines.Nodes
         public dynamic CustomData { get; set; }
 
         /// <summary>
-        ///     Logger used to write to the log from this node.
-        /// </summary>
-        public ILogger Logger => LoggerProvider.CreateLogger(this);
-
-        /// <summary>
         ///     Resets the current node to unrun state.
         /// </summary>
         public virtual void Reset()
         {
-            Logger.LogDebug("Resetting the node.");
+            Log.Debug("Resetting the node.");
             Status = NodeRunStatus.NotRun;
         }
 
@@ -110,7 +105,7 @@ namespace UKHO.ADDS.Infrastructure.Pipelines.Nodes
 
             try
             {
-                nodeTimer.LogStart(Logger, this, "ExecuteManySeriallyAsync");
+                nodeTimer.LogStart(this, "ExecuteManySeriallyAsync");
 
                 _processManyMode = true;
 
@@ -132,7 +127,7 @@ namespace UKHO.ADDS.Infrastructure.Pipelines.Nodes
                 {
                     try
                     {
-                        Logger.LogDebug("Running all subjects asynchronously in a serial manner.");
+                        Log.Debug("Running all subjects asynchronously in a serial manner.");
 
                         var result = await ExecuteAsync(new ExecutionContext<T>(subject, options))
                             .ConfigureAwait(false);
@@ -160,7 +155,7 @@ namespace UKHO.ADDS.Infrastructure.Pipelines.Nodes
             finally
             {
                 _processManyMode = false;
-                nodeTimer.LogStop(Logger, this, "ExecuteAsync");
+                nodeTimer.LogStop(this, "ExecuteAsync");
             }
         }
 
@@ -179,7 +174,7 @@ namespace UKHO.ADDS.Infrastructure.Pipelines.Nodes
 
             try
             {
-                nodeTimer.LogStart(Logger, this, "ExecuteManyAsync");
+                nodeTimer.LogStart(this, "ExecuteManyAsync");
                 _processManyMode = true;
                 Result = new NodeResult(default(T), Id, FlowId);
 
@@ -195,7 +190,7 @@ namespace UKHO.ADDS.Infrastructure.Pipelines.Nodes
                     options = new ExecutionOptions();
                 }
 
-                Logger.LogDebug("Running all subjects asynchronously.");
+                Log.Debug("Running all subjects asynchronously.");
 
                 Task aggregateTask = null;
                 try
@@ -227,7 +222,7 @@ namespace UKHO.ADDS.Infrastructure.Pipelines.Nodes
             finally
             {
                 _processManyMode = false;
-                nodeTimer.LogStop(Logger, this, "ExecuteAsync");
+                nodeTimer.LogStop(this, "ExecuteAsync");
             }
         }
 
@@ -252,11 +247,11 @@ namespace UKHO.ADDS.Infrastructure.Pipelines.Nodes
 
             try
             {
-                nodeTimer.LogStart(Logger, this, "ExecuteAsync");
+                nodeTimer.LogStart(this, "ExecuteAsync");
 
                 if (Status != NodeRunStatus.NotRun)
                 {
-                    Logger.LogDebug("Status does not equal 'NotRun', resetting the node before execution");
+                    Log.Debug("Status does not equal 'NotRun', resetting the node before execution");
                     Reset();
                 }
 
@@ -277,12 +272,12 @@ namespace UKHO.ADDS.Infrastructure.Pipelines.Nodes
 
                     if (!await ShouldExecuteInternalAsync(context).ConfigureAwait(false))
                     {
-                        Logger.LogInformation("ShouldExecute returned false, skipping execution");
+                        Log.Information("ShouldExecute returned false, skipping execution");
                         return result;
                     }
 
                     Status = NodeRunStatus.Running;
-                    Logger.LogDebug("Executing the node");
+                    Log.Debug("Executing the node");
 
                     try
                     {
@@ -290,11 +285,11 @@ namespace UKHO.ADDS.Infrastructure.Pipelines.Nodes
                         //Reset the subject in case it was changed.
                         result.Subject = context.Subject;
                         Status = NodeRunStatus.Completed;
-                        Logger.LogInformation("Node completed execution, status is {0}", result.Status);
+                        Log.Information("Node completed execution, status is {0}", result.Status);
                     }
                     catch (Exception ex)
                     {
-                        Logger.LogError("Node erred during execution, status is Failed, {0}", ex.Message);
+                        Log.Error("Node erred during execution, status is Failed, {0}", ex.Message);
                         Status = NodeRunStatus.Faulted;
                         result.Subject = context.Subject;
                         result.Status = NodeResultStatus.Failed;
@@ -315,7 +310,7 @@ namespace UKHO.ADDS.Infrastructure.Pipelines.Nodes
             }
             finally
             {
-                nodeTimer.LogStop(Logger, this, "ExecuteAsync");
+                nodeTimer.LogStop(this, "ExecuteAsync");
             }
         }
 
@@ -328,13 +323,13 @@ namespace UKHO.ADDS.Infrastructure.Pipelines.Nodes
         {
             if (LocalOptions != null)
             {
-                Logger.LogDebug(
+                Log.Debug(
                     "Local options detected, merging with global settings. Local Options - ContinueOnFailure:{0}, ThrowOnError:{1}",
                     LocalOptions.ContinueOnFailure, LocalOptions.ThrowOnError);
                 return LocalOptions;
             }
 
-            Logger.LogDebug(
+            Log.Debug(
                 "Local options not present, defaulting to global settings. Global Options - ContinueOnFailure:{0}, ThrowOnError:{1}",
                 globalOptions.ContinueOnFailure, globalOptions.ThrowOnError);
 
@@ -356,7 +351,7 @@ namespace UKHO.ADDS.Infrastructure.Pipelines.Nodes
         /// <returns>The execution context to be used in node execution.</returns>
         protected virtual IExecutionContext<T> PrepareExecutionContext(IExecutionContext<T> context, NodeResult result)
         {
-            Logger.LogDebug("Preparing the execution context for execution.");
+            Log.Debug("Preparing the execution context for execution.");
             context.AddResult(result);
 
             return context;
@@ -385,7 +380,7 @@ namespace UKHO.ADDS.Infrastructure.Pipelines.Nodes
             var exceptions = Result.GetFailExceptions().ToList();
             if (exceptions.Count > 0)
             {
-                Logger.LogInformation("Child executions returned {0} exceptions.", exceptions.Count);
+                Log.Information("Child executions returned {0} exceptions.", exceptions.Count);
                 Result.Exception = exceptions.Count == 1 ? exceptions[0] : new AggregateException(exceptions);
             }
         }

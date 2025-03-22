@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
+using Serilog;
 
 namespace UKHO.ADDS.Infrastructure.Pipelines.Nodes
 {
@@ -19,7 +19,7 @@ namespace UKHO.ADDS.Infrastructure.Pipelines.Nodes
         {
             NodeResult result = null;
 
-            Logger.LogDebug("Running first matching child node.");
+            Log.Debug("Running first matching child node");
             foreach (var childNode in Children)
             {
                 result = await childNode.ExecuteAsync(context).ConfigureAwait(false);

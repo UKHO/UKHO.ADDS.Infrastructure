@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
+using Serilog;
 
 namespace UKHO.ADDS.Infrastructure.Pipelines.Nodes
 {
@@ -23,7 +23,7 @@ namespace UKHO.ADDS.Infrastructure.Pipelines.Nodes
 
             try
             {
-                Logger.LogDebug("Running all child nodes asynchronously.");
+                Log.Debug("Running all child nodes asynchronously.");
                 results = await aggregateTask.ConfigureAwait(false);
             }
             catch

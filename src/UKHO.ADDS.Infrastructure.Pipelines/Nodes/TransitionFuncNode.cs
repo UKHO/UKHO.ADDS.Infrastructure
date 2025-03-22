@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
+using Serilog;
+using Serilog.Core;
 
 namespace UKHO.ADDS.Infrastructure.Pipelines.Nodes
 {
@@ -33,11 +34,11 @@ namespace UKHO.ADDS.Infrastructure.Pipelines.Nodes
         {
             if (TransitionSourceFuncAsync != null)
             {
-                Logger.LogDebug("TransitionSourceFuncAsync exists, using this function.");
+                Log.Debug("TransitionSourceFuncAsync exists, using this function.");
                 return await TransitionSourceFuncAsync(sourceContext).ConfigureAwait(false);
             }
 
-            Logger.LogDebug("TransitionSourceFuncAsync doesn't exist, returning default destination.");
+            Log.Debug("TransitionSourceFuncAsync doesn't exist, returning default destination.");
             return default;
         }
 
@@ -53,11 +54,11 @@ namespace UKHO.ADDS.Infrastructure.Pipelines.Nodes
         {
             if (TransitionResultFuncAsync != null)
             {
-                Logger.LogDebug("TransitionResultFuncAsync exists, using this function.");
+                Log.Debug("TransitionResultFuncAsync exists, using this function.");
                 return await TransitionResultFuncAsync(sourceContext, result).ConfigureAwait(false);
             }
 
-            Logger.LogDebug("TransitionResultFuncAsync doesn't exist, returning original subject.");
+            Log.Debug("TransitionResultFuncAsync doesn't exist, returning original subject.");
             return sourceContext.Subject;
         }
     }

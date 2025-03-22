@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
+using Serilog;
+using Serilog.Core;
 using UKHO.ADDS.Infrastructure.Pipelines.Contexts;
 using UKHO.ADDS.Infrastructure.Pipelines.Factories;
 
@@ -30,7 +31,7 @@ namespace UKHO.ADDS.Infrastructure.Pipelines.Nodes
         /// <param name="child">Child node to add.</param>
         public void AddChild(INode<T> child)
         {
-            Logger.LogDebug("Added child node.");
+            Log.Debug("Added child node.");
             _children.Add(child);
         }
 
@@ -40,7 +41,7 @@ namespace UKHO.ADDS.Infrastructure.Pipelines.Nodes
         /// <param name="children">Children to add.</param>
         public void AddChildren(IEnumerable<INode<T>> children)
         {
-            Logger.LogDebug("Added children.");
+            Log.Debug("Added children.");
             _children.AddRange(children);
         }
 
@@ -50,7 +51,7 @@ namespace UKHO.ADDS.Infrastructure.Pipelines.Nodes
         /// <param name="child">Child node to remove.</param>
         public void RemoveChild(INode<T> child)
         {
-            Logger.LogDebug("Removed child node.");
+            Log.Debug("Removed child node.");
             _children.Remove(child);
         }
 
@@ -78,9 +79,9 @@ namespace UKHO.ADDS.Infrastructure.Pipelines.Nodes
                 return NodeResultStatus.NotRun;
             }
 
-            Logger.LogDebug("Preparing to run child nodes.");
+            Log.Debug("Preparing to run child nodes.");
             var status = await ExecuteChildrenAsync(context).ConfigureAwait(false);
-            Logger.LogDebug("Completed running child nodes.");
+            Log.Debug("Completed running child nodes.");
             return status;
         }
 
@@ -93,7 +94,7 @@ namespace UKHO.ADDS.Infrastructure.Pipelines.Nodes
         protected sealed override IExecutionContext<T> PrepareExecutionContext(IExecutionContext<T> context,
             NodeResult result)
         {
-            Logger.LogDebug("Preparing execution context.");
+            Log.Debug("Preparing execution context.");
             var resultContext = new ExecutionContext<T>(context, result);
 
             context.AddResult(result);
