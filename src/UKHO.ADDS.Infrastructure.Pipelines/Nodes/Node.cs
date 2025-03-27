@@ -243,6 +243,7 @@ namespace UKHO.ADDS.Infrastructure.Pipelines.Nodes
             Guard.AgainstNullArgument("context", sourceContext);
             Guard.AgainstNullArgumentProperty("context", "Subject", sourceContext.Subject);
 
+            var nodeName = GetType().Name;
             var nodeTimer = new NodeTimer();
 
             try
@@ -251,7 +252,7 @@ namespace UKHO.ADDS.Infrastructure.Pipelines.Nodes
 
                 if (Status != NodeRunStatus.NotRun)
                 {
-                    Log.Debug("Status does not equal 'NotRun', resetting the node before execution");
+                    Log.Debug($"[{nodeName}] Status does not equal 'NotRun', resetting the node before execution");
                     Reset();
                 }
 
@@ -272,12 +273,12 @@ namespace UKHO.ADDS.Infrastructure.Pipelines.Nodes
 
                     if (!await ShouldExecuteInternalAsync(context).ConfigureAwait(false))
                     {
-                        Log.Information("ShouldExecute returned false, skipping execution");
+                        Log.Information($"[{nodeName}] ShouldExecute returned false, skipping execution");
                         return result;
                     }
 
                     Status = NodeRunStatus.Running;
-                    Log.Debug("Executing the node");
+                    Log.Debug($"[{nodeName}] Executing the node");
 
                     try
                     {
@@ -285,11 +286,11 @@ namespace UKHO.ADDS.Infrastructure.Pipelines.Nodes
                         //Reset the subject in case it was changed.
                         result.Subject = context.Subject;
                         Status = NodeRunStatus.Completed;
-                        Log.Information("Node completed execution, status is {0}", result.Status);
+                        Log.Information($"[{nodeName}] Node completed execution, status is {0}", result.Status);
                     }
                     catch (Exception ex)
                     {
-                        Log.Error("Node erred during execution, status is Failed, {0}", ex.Message);
+                        Log.Error($"[{nodeName}] Node failed during execution, status is Failed, {0}", ex.Message);
                         Status = NodeRunStatus.Faulted;
                         result.Subject = context.Subject;
                         result.Status = NodeResultStatus.Failed;
