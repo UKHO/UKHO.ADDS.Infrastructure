@@ -19,7 +19,7 @@ variables:
 - name: UKHOAssemblyProduct
   value: "ADDS Shared Infrastructure"
 - name: SdkVersion
-  value: "8.0.x"
+  value: "10.0.x"
 
 stages:
 - stage: BuildTestPublish
@@ -74,14 +74,13 @@ stages:
         workingDirectory: '$(Build.SourcesDirectory)'
         packagesDirectory: '$(Build.SourcesDirectory)\packages'
 
-    - task: DotNetCoreCLI@2
+    - task: PowerShell@2
       displayName: Unit tests
       inputs:
-        command: test
-        projects: |
-          **/*.Tests.csproj
-        testRunTitle: UnitTests
+        targetType: inline
         workingDirectory: '$(Build.SourcesDirectory)'
+        script: |
+          dotnet test "$(Build.SourcesDirectory)\Infrastructure.sln" --configuration $(BuildConfiguration) --no-restore
     
     - task: DotNetCoreCLI@2
       displayName: Pack libraries
