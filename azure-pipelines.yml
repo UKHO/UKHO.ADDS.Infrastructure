@@ -19,7 +19,7 @@ variables:
 - name: UKHOAssemblyProduct
   value: "ADDS Shared Infrastructure"
 - name: SdkVersion
-  value: "8.0.x"
+  value: "10.0.x"
 
 stages:
 - stage: BuildTestPublish
