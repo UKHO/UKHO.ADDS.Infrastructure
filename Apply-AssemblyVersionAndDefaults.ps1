@@ -5,7 +5,8 @@ param (
     [Parameter(Mandatory = $true)] [string] $UKHOAssemblyCopyright,
     [Parameter(Mandatory = $true)] [string] $UKHOAssemblyVersionPrefix,
     [Parameter(Mandatory = $true)] [string] $UKHOAssemblyProduct,
-    [Parameter(Mandatory = $true)] [string] $SourceRevisionId
+    [Parameter(Mandatory = $true)] [string] $SourceRevisionId,
+    [Parameter(Mandatory = $true)] [string] $PreReleaseVersion
 )
 
 Write-Host "Build number: " $buildNumber
@@ -25,7 +26,7 @@ if ($validBuildNumber -eq $false) {
 
 # Magic var $Matches comes from the above regex match statement: $buildNumber -match $buildNumberRegex
 $versionPrefix = $UKHOAssemblyVersionPrefix + $Matches.2
-$versionSuffix = "alpha." + $Matches.3
+$versionSuffix = $Matches.3
 
 if ($PreReleaseVersion -ne "n/a") {
     $versionSuffix = $PreReleaseVersion + "." + $versionSuffix
@@ -33,7 +34,6 @@ if ($PreReleaseVersion -ne "n/a") {
 
 $assemblyVersion = $versionPrefix + "." + $Matches.3
 $versionFull = $versionPrefix + "." + $versionSuffix
-
 Write-Host "##vso[task.setvariable variable=NuGetVersion;isOutput=true]$($versionFull)"
 
 $assemblyValues = @{
@@ -41,8 +41,8 @@ $assemblyValues = @{
     "Copyright"         = $UKHOAssemblyCopyright;
     "Description"       = $UKHOAssemblyProduct;
     "Product"           = $UKHOAssemblyProduct;
-    "AssemblyVersion"   = $versionFull;
-    "FileVersion"       = $versionFull;
+    "AssemblyVersion"   = $assemblyVersion;
+    "FileVersion"       = $assemblyVersion;
     "VersionPrefix"     = $versionPrefix;
     "VersionSuffix"     = $versionSuffix;
     "SourceRevisionId"  = $SourceRevisionId;

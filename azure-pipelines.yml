@@ -66,6 +66,7 @@ stages:
           -UKHOAssemblyVersionPrefix "$env:UKHOAssemblyVersionPrefix"
           -UKHOAssemblyProduct "$env:UKHOAssemblyProduct"
           -SourceRevisionId "$(Build.SourceVersion)"
+          -PreReleaseVersion "${{ parameters.PreReleaseVersion }}"
           
     - task: UseDotNet@2
       displayName: Use .NET $(SdkVersion) sdk
