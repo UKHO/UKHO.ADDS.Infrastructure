@@ -1,5 +1,16 @@
 name: $(BuildDefinitionName)_$(SourceBranchName)_$(Date:yyyyMMdd).$(BuildCounter)
 
+parameters:
+- name: PreReleaseVersion
+  displayName: "Pre-release version (use n/a for normal release)"
+  type: string
+  values:
+    - 'alpha'
+    - 'beta'
+    - 'rc'
+    - 'n/a'
+  default: 'rc'
+
 trigger:
 - main
 
@@ -15,7 +26,7 @@ variables:
 - name: UKHOAssemblyCompany
   value: "UK Hydrographic Office"
 - name: UKHOAssemblyVersionPrefix
-  value: "0.0."
+  value: "1.0."
 - name: UKHOAssemblyProduct
   value: "ADDS Shared Infrastructure"
 - name: SdkVersion
